@@ -21,8 +21,8 @@
     </div>
   </div>
   <div class="card-body">
-    <ngx-datatable class="bootstrap" [rows]="book.items" [count]="book.totalCount" [list]="list" default
-      [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true">
+    <ngx-datatable class="bootstrap" [rows]="book.items" [count]="book.totalCount" [list]="list" [columnMode]="'force'"
+      [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true">
 
       <!-- ACTIONS (PRIMERA COLUMNA) -->
       <ngx-datatable-column [name]="'::Actions' | abpLocalization" [maxWidth]="150" [sortable]="false">
@@ -47,17 +47,7 @@
         </ng-template>
       </ngx-datatable-column>
 
-      <div class="form-group">
-        <label for="author-id">Author</label><span> * </span>
-        <select class="form-control" id="author-id" formControlName="authorId">
-          <option [ngValue]="null">Select author</option>
-          @for (author of authors$ | async; track author) {
-          <option [ngValue]="author.id">
-            {{ author.name }}
-          </option>
-          }
-        </select>
-      </div>
+
       <!-- NAME -->
       <ngx-datatable-column [name]="'::Name' | abpLocalization" prop="name">
       </ngx-datatable-column>
@@ -65,9 +55,9 @@
       <ngx-datatable-column [name]="'::Author' | abpLocalization" prop="authorName" [sortable]="false" />
 
       <!-- TYPE -->
-      <ngx-datatable-column [name]="'::Type' | abpLocalization" prop="type.value">
+      <ngx-datatable-column [name]="'::Type' | abpLocalization" prop="type">
         <ng-template let-row="row" ngx-datatable-cell-template>
-          {{ '::Enum:BookType.' + row.type.value | abpLocalization }}
+          {{ '::Enum:BookType.' + row.type | abpLocalization }}
         </ng-template>
       </ngx-datatable-column>
 
@@ -97,7 +87,19 @@
 
 
   <ng-template #abpBody>
+
     <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="form-group">
+        <label for="author-id">Author</label><span> * </span>
+        <select class="form-control" id="author-id" formControlName="authorId">
+          <option [ngValue]="null">Select author</option>
+          @for (author of authors$ | async; track author) {
+          <option [ngValue]="author.id">
+            {{ author.name }}
+          </option>
+          }
+        </select>
+      </div>
       <div class="mt-2">
         <label for="book-name">Name</label><span> * </span>
         <input type="text" id="book-name" class="form-control" formControlName="name" autofocus />
