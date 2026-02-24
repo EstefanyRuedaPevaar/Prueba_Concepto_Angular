@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CoreModule, ListService, PagedResultDto } from '@abp/ng.core';
+import { CoreModule, ListService, NgxValidateCoreModule, PagedResultDto } from '@abp/ng.core';
 import { AuthorService, AuthorDto } from '@proxy/acme/book-store/authors';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbDateNativeAdapter, NgbDateAdapter,NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -10,7 +10,7 @@ import { ConfirmationService, Confirmation, ThemeSharedModule } from '@abp/ng.th
   templateUrl: './author.component.html',
   styleUrls: ['./author.component.scss'],
   providers: [ListService, { provide: NgbDateAdapter, useClass: NgbDateNativeAdapter }],
-  imports: [CoreModule, ThemeSharedModule, NgbDropdownModule],
+  imports: [CoreModule, ThemeSharedModule, NgbDropdownModule, NgxValidateCoreModule],
 })
 export class AuthorComponent implements OnInit {
   author = { items: [], totalCount: 0 } as PagedResultDto<AuthorDto>;

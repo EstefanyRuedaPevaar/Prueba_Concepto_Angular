@@ -4,10 +4,9 @@ import {
   provideLogo,
   withEnvironmentOptions,
 } from '@abp/ng.theme.shared';
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
-
 import { appRoutes } from './app.routes';
 import { APP_ROUTE_PROVIDER } from './route.provider';
 import { provideAbpCore, withOptions } from '@abp/ng.core';
@@ -21,6 +20,9 @@ import { provideTenantManagementConfig } from '@abp/ng.tenant-management/config'
 import { provideFeatureManagementConfig } from '@abp/ng.feature-management';
 import { provideThemeLeptonX } from '@abp/ng.theme.lepton-x';
 import { provideSideMenuLayout } from '@abp/ng.theme.lepton-x/layouts';
+import { NgxValidateCoreModule } from '@ngx-validate/core';
+import { DxValidationGroupModule } from 'devextreme-angular';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -47,5 +49,6 @@ export const appConfig: ApplicationConfig = {
         wrongPassword: 'Please choose 1q2w3E*',
       })
     ),
+    importProvidersFrom(NgxValidateCoreModule, DxValidationGroupModule),
   ],
 };

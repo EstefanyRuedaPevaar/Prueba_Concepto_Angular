@@ -6,13 +6,15 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbDateNativeAdapter, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
 import { ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
+import { NgxValidateCoreModule } from '@ngx-validate/core';
+import { DxValidationGroupModule } from 'devextreme-angular';
 
 @Component({
   selector: 'app-book',
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss'],
   providers: [ListService, { provide: NgbDateAdapter, useClass: NgbDateNativeAdapter }],
-  imports: [CoreModule, ThemeSharedModule],
+  imports: [CoreModule, ThemeSharedModule,NgxValidateCoreModule, DxValidationGroupModule],
 })
 export class BookComponent implements OnInit {
 [x: string]: any;
@@ -30,10 +32,11 @@ export class BookComponent implements OnInit {
   private readonly bookService = inject(BookService);
   private readonly fb = inject(FormBuilder);
   private readonly confirmation = inject(ConfirmationService);
+  private readonly ngxValidateCoreModule = inject(NgxValidateCoreModule);
 
   ngOnInit() {
     const bookStreamCreator = (query) => this.bookService.getList(query);
-
+    
     this.list.hookToQuery(bookStreamCreator).subscribe((response) => {
       this.book = response;
     });
