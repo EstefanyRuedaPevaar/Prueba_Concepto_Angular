@@ -1,12 +1,11 @@
 import { CoreModule, ListService, PagedResultDto } from '@abp/ng.core';
-import { Component, inject, OnInit } from '@angular/core';
-import { BookService, BookDto, AuthorLookupDto } from '@proxy/acme/book-store/books';
+import { Component, OnInit, inject } from '@angular/core';
+import { BookService, BookDto} from '@proxy/acme/book-store/books';
+import { bookTypeOptions } from '@proxy/acme/book-store/books/book-type.enum';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbDateNativeAdapter, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmationService, Confirmation, ThemeSharedModule } from '@abp/ng.theme.shared';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { bookTypeOptions } from '@proxy/acme/book-store/books/book-type.enum';
+import { ThemeSharedModule } from '@abp/ng.theme.shared';
+import { ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'app-book',
@@ -16,13 +15,12 @@ import { bookTypeOptions } from '@proxy/acme/book-store/books/book-type.enum';
   imports: [CoreModule, ThemeSharedModule],
 })
 export class BookComponent implements OnInit {
+[x: string]: any;
   book = { items: [], totalCount: 0 } as PagedResultDto<BookDto>;
 
+  selectedBook = {} as BookDto; // declare selectedBook
+
   form: FormGroup;
-
-  selectedBook = {} as BookDto;
-
-  authors$: Observable<AuthorLookupDto[]>;
 
   bookTypes = bookTypeOptions;
 
@@ -33,10 +31,6 @@ export class BookComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly confirmation = inject(ConfirmationService);
 
-  constructor() {
-    this.authors$ = this.bookService.getAuthorLookup().pipe(map((r) => r.items));
-  }
-
   ngOnInit() {
     const bookStreamCreator = (query) => this.bookService.getList(query);
 
@@ -46,11 +40,12 @@ export class BookComponent implements OnInit {
   }
 
   createBook() {
-    this.selectedBook = {} as BookDto;
+    this.selectedBook = {} as BookDto; // reset the selected book
     this.buildForm();
     this.isModalOpen = true;
   }
 
+  // Add editBook method
   editBook(id: string) {
     this.bookService.get(id).subscribe((book) => {
       this.selectedBook = book;
@@ -61,8 +56,7 @@ export class BookComponent implements OnInit {
 
   buildForm() {
     this.form = this.fb.group({
-      authorId: [this.selectedBook.authorId || null, Validators.required],
-      name: [this.selectedBook.name || null, Validators.required],
+      name: [this.selectedBook.name || '', Validators.required],
       type: [this.selectedBook.type || null, Validators.required],
       publishDate: [
         this.selectedBook.publishDate ? new Date(this.selectedBook.publishDate) : null,
@@ -72,6 +66,7 @@ export class BookComponent implements OnInit {
     });
   }
 
+  // change the save method
   save() {
     if (this.form.invalid) {
       return;
@@ -87,9 +82,9 @@ export class BookComponent implements OnInit {
       this.list.get();
     });
   }
-
+  // Add a delete method
   delete(id: string) {
-    this.confirmation.warn('::AreYouSureToDelete', 'AbpAccount::AreYouSure').subscribe((status) => {
+    this.confirmation.warn('::AreYouSureToDelete', '::AreYouSure').subscribe((status) => {
       if (status === Confirmation.Status.confirm) {
         this.bookService.delete(id).subscribe(() => this.list.get());
       }
